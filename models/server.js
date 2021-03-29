@@ -4,6 +4,7 @@ const http    = require('http');
 const socketio= require('socket.io');
 const path    = require('path');
 const Sockets = require('./socket');
+const cors    = require('cors');
 
 class Server {
 
@@ -26,6 +27,17 @@ class Server {
         
         // Despliegue del directorio público
         this.app.use( express.static( path.resolve( __dirname, '../public') ) );
+
+        // cors
+        this.app.use( cors() );
+        // para permitir ejecución de los socket vía protocolo file
+        this.app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
+            res.header("Access-Control-Allow-Headers", "Content-Type");
+            res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+            next();
+          });
     }
 
     configurarSockets() {
